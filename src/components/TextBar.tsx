@@ -20,11 +20,13 @@ const Textbar: React.FC<TextBarProps> = ({ roomId, userId }) => {
     };
     const sendMessage = () => {
         if (currentMessage.trim() !== '') {
+            
             socket.emit('message', { 
                 'text' : currentMessage,
                 'from' : userId,
                 'room' : roomId
             });
+            console.log("I send message. text：",currentMessage)
             setCurrentMessage('');
         }
     }
