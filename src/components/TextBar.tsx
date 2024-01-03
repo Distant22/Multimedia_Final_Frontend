@@ -11,7 +11,7 @@ const Textbar: React.FC<TextBarProps> = ({ roomId, userId }) => {
 
     const [currentMessage, setCurrentMessage] = useState('');
     const [messages, setMessages] = useState<[string, boolean][]>([]);
-    const socket = io('http://localhost:8081'); 
+    const socket = io('https://multimedia-backend.onrender.com'); 
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
@@ -34,7 +34,7 @@ const Textbar: React.FC<TextBarProps> = ({ roomId, userId }) => {
         }
     };
     const fetchData = () => {
-        fetch('http://localhost:8081/api/messages', {
+        fetch('https://multimedia-backend.onrender.com/api/messages', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
