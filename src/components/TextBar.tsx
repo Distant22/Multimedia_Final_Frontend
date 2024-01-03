@@ -10,7 +10,7 @@ interface TextBarProps {
 const Textbar: React.FC<TextBarProps> = ({ roomId, userId }) => {
 
     const [currentMessage, setCurrentMessage] = useState('');
-    const [messages, setMessages] = useState<[string, boolean][]>([]);
+    const [messages, setMessages] = useState<[string, boolean, string][]>([]);
     const socket = io('https://multimedia-backend.onrender.com'); 
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const scrollToBottom = () => {
@@ -50,9 +50,10 @@ const Textbar: React.FC<TextBarProps> = ({ roomId, userId }) => {
             console.log('Received data from the backend:', data);
             const newTexts = data.map(item => ({
                 text: item.text,
-                isMe: item.sender === userId ? true : false
+                isMe: item.sender === userId ? true : false,
+                sender: item.sender
             }));
-            setMessages(newTexts.map(({ text, isMe }) => [text, isMe]));
+            setMessages(newTexts.map(({ text, isMe, sender }) => [text, isMe, sender]));
         })
         .catch(error => {
             console.error('Error:', error);
@@ -86,9 +87,12 @@ const Textbar: React.FC<TextBarProps> = ({ roomId, userId }) => {
         <>
             <div className="w-full h-[85%] flex flex-col p-4 overflow-y-scroll">
             {messages.map((message, index) => (
-                <div key={index} className={message[1] ? "chat chat-end" : "chat chat-start"}>
-                    <div className={message[1] ? "chat-bubble chat-bubble-info" : "chat-bubble chat-bubble-accent"}>
-                        {message[0]}
+                <div key={index} className="chat-header">
+                    { message[2] }
+                    <div className={message[1] ? "chat chat-end" : "chat chat-start"}>
+                        <div className={message[1] ? "chat-bubble chat-bubble-info" : "chat-bubble chat-bubble-accent"}>
+                            {message[0]}
+                        </div>
                     </div>
                 </div>
             ))}

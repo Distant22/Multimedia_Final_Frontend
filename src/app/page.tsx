@@ -19,7 +19,7 @@ const ChatPage = () => {
     <div className="flex flex-col h-screen justify-between">
       {showChatPage ? (
         <>
-          <Header roomId={roomData} userId={userData} />
+          <Header roomId={roomData} />
           <div className="flex flex-col h-[90%] bg-white items-center">
             <Textbar roomId={roomData} userId={userData} />
           </div>
