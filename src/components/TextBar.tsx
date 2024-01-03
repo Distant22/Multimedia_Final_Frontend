@@ -89,13 +89,13 @@ const Textbar: React.FC<TextBarProps> = ({ roomId, userId }) => {
         <>
             <div className="w-full h-[85%] flex flex-col p-4 overflow-y-scroll">
             {messages.map((message, index) => (
-                <div key={index} className="chat-header">
+                <div key={index} className={message[1] ? "chat chat-end" : "chat chat-start"}>
+                    <div className="chat-header">
                     { message[2] }
-                    <div className={message[1] ? "chat chat-end" : "chat chat-start"}>
-                        <div className={message[1] ? "chat-bubble chat-bubble-info" : "chat-bubble chat-bubble-accent"}>
-                            {message[0]}
-                        </div>
+                    <div className={message[1] ? "chat-bubble chat-bubble-info" : "chat-bubble chat-bubble-accent"}>
+                        {message[0]}
                     </div>
+                </div>
                 </div>
             ))}
             <div ref={messagesEndRef} />
