@@ -21,13 +21,15 @@ const Textbar: React.FC<TextBarProps> = ({ roomId, userId }) => {
     const sendMessage = () => {
         if (currentMessage.trim() !== '') {
             
+            let msg = currentMessage;
+            setCurrentMessage('');
             socket.emit('message', { 
-                'text' : currentMessage,
+                'text' : msg,
                 'from' : userId,
                 'room' : roomId
             });
-            console.log("I send message. text：",currentMessage)
-            setCurrentMessage('');
+            console.log("I send message. text：",msg)
+            
         }
     }
     const handleKeyDown = (e: any) => {
