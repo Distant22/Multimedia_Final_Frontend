@@ -10,7 +10,7 @@ interface TextBarProps {
 const Textbar: React.FC<TextBarProps> = ({ roomId, userId }) => {
 
     const [currentMessage, setCurrentMessage] = useState('');
-    const [messages, setMessages] = useState<[string, boolean, string][]>([]);
+    const [messages, setMessages] = useState<[string, boolean, string, string][]>([]);
     const socket = io('https://multimedia-backend.onrender.com'); 
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
     const scrollToBottom = () => {
@@ -50,14 +50,15 @@ const Textbar: React.FC<TextBarProps> = ({ roomId, userId }) => {
             })
         })
         .then(response => response.json())
-        .then((data: { text: string, sender: string }[]) => {
+        .then((data: { text: string, sender: string, room_id: string }[]) => {
             console.log('Received data from the backend:', data);
             const newTexts = data.map(item => ({
                 text: item.text,
                 isMe: item.sender === userId ? true : false,
-                sender: item.sender
+                sender: item.sender,
+                from_id: item.room_id
             }));
-            setMessages(newTexts.map(({ text, isMe, sender }) => [text, isMe, sender]));
+            setMessages(newTexts.map(({ text, isMe, sender, from_id }) => [text, isMe, sender, from_id]));
         })
         .catch(error => {
             console.error('Error:', error);
@@ -97,7 +98,7 @@ const Textbar: React.FC<TextBarProps> = ({ roomId, userId }) => {
                     <div className={message[1] ? "chat-bubble chat-bubble-info" : "chat-bubble chat-bubble-accent"}>
                         {message[0]}
                     </div>
-                </div>
+                    </div>
                 </div>
             ))}
             <div ref={messagesEndRef} />
