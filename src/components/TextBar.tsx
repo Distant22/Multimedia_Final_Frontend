@@ -21,13 +21,14 @@ const Textbar: React.FC<TextBarProps> = ({ roomId, userId }) => {
 
     const sendMessage = () => {
         if (currentMessage.trim() !== '') {
+            fetchData()
             const msg = currentMessage;
+            setCurrentMessage(''); 
             socket.emit('message', {
                 'text': msg,
                 'from': userId,
                 'room': roomId
             });
-            setCurrentMessage(''); // Clear input after sending message
         }
     };
 
