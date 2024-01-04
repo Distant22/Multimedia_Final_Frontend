@@ -20,18 +20,21 @@ const Textbar: React.FC<TextBarProps> = ({ roomId, userId }) => {
     };
     const sendMessage = () => {
         if (currentMessage.trim() !== '') {
-            
             let msg = currentMessage;
-            setCurrentMessage('');
             socket.emit('message', { 
                 'text' : msg,
                 'from' : userId,
                 'room' : roomId
             });
             console.log("I send message. text：",msg)
-            
+            fetchData()
         }
     }
+    useEffect(() => {
+        if (currentMessage.trim() !== '') {
+            setCurrentMessage(''); // Move clearing logic to useEffect
+        }
+    }, [messages]);
     const handleKeyDown = (e: any) => {
         if (e.key === 'Enter') {
             sendMessage();
