@@ -15,7 +15,7 @@ const Welcome: React.FC<WelcomeProps> = ({ onSubmit }) => {
 
     return (
         <header className="h-full bg-white text-black flex flex-col items-center justify-center space-y-8">
-            <p className="w-[5%]"></p>
+            <p className="text-2xl flex">多媒體網路 期末專案</p>
             <label htmlFor="roomDataInput">輸入聊天室名稱</label>
             <input
                 id="roomDataInput"

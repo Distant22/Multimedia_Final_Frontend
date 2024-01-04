@@ -74,10 +74,6 @@ const Textbar: React.FC<TextBarProps> = ({ roomId, userId }) => {
             socket.on('connect', () => {
                 console.log('Socket connected:', socket.connected);
             });
-            socket.on('updatedMessages', (updatedData) => {
-                console.log("Update")
-                fetchData()
-            });
             socket.on('message', (message) => {
                 console.log("On.")
                 fetchData()
