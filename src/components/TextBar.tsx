@@ -3,86 +3,85 @@ import { useEffect, useRef, useState } from 'react';
 import io from 'socket.io-client';
 
 interface TextBarProps {
-    roomId: string,
-    userId: string
+    roomId: string;
+    userId: string;
 }
 
 const Textbar: React.FC<TextBarProps> = ({ roomId, userId }) => {
-
     const [currentMessage, setCurrentMessage] = useState('');
     const [messages, setMessages] = useState<[string, boolean, string, string][]>([]);
-    const socket = io('https://multimedia-backend.onrender.com'); 
+    const socket = io('https://multimedia-backend.onrender.com');
     const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     };
+
     const sendMessage = () => {
         if (currentMessage.trim() !== '') {
-            let msg = currentMessage;
-            socket.emit('message', { 
-                'text' : msg,
-                'from' : userId,
-                'room' : roomId
+            const msg = currentMessage;
+            socket.emit('message', {
+                'text': msg,
+                'from': userId,
+                'room': roomId
             });
-            console.log("I send message. text：",msg)
-            fetchData()
+            setCurrentMessage(''); // Clear input after sending message
         }
-    }
-    useEffect(() => {
-        if (currentMessage.trim() !== '') {
-            setCurrentMessage(''); // Move clearing logic to useEffect
-        }
-    }, [messages]);
-    const handleKeyDown = (e: any) => {
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             sendMessage();
         }
     };
-    const fetchData = () => {
-        fetch('https://multimedia-backend.onrender.com/api/messages', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                text: currentMessage,
-                from: userId,
-                room: roomId
-            })
-        })
-        .then(response => response.json())
-        .then((data: { text: string, sender: string, room_id: string }[]) => {
-            console.log('Received data from the backend:', data);
-            const newTexts = data.map(item => ({
-                text: item.text,
-                isMe: item.sender === userId ? true : false,
-                sender: item.sender,
-                from_id: item.room_id
-            }));
-            setMessages(newTexts.map(({ text, isMe, sender, from_id }) => [text, isMe, sender, from_id]));
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    }
+
+    const fetchData = async () => {
+        try {
+            const response = await fetch('https://multimedia-backend.onrender.com/api/messages', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    text: currentMessage,
+                    from: userId,
+                    room: roomId
+                })
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok.');
+            }
+            const data: { text: string; sender: string; room_id: string }[] = await response.json();
+
+            const newTexts: [string, boolean, string, string][] = data.map(item => ([
+                item.text,
+                item.sender === userId,
+                item.sender,
+                item.room_id
+            ]));
+            setMessages(newTexts);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
 
     useEffect(() => {
-        console.log("好了")
-        fetchData()
-      }, []);
+        fetchData();
+    }, []);
+
     useEffect(() => {
         if (socket) {
             socket.on('connect', () => {
                 console.log('Socket connected:', socket.connected);
             });
-            socket.on('message', (message) => {
-                console.log("On.")
-                fetchData()
+            socket.on('message', () => {
+                fetchData();
             });
         }
-    }, [socket, fetchData]);
+    }, [socket]);
+
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
