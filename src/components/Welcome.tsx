@@ -19,14 +19,14 @@ const Welcome: React.FC<WelcomeProps> = ({ onSubmit }) => {
             <label htmlFor="roomDataInput">輸入聊天室名稱</label>
             <input
                 id="roomDataInput"
-                className="w-36 h-12 rounded-full text-white px-8"
+                className="w-36 h-12 rounded-full text-white px-8 bg-gray-800"
                 value={roomData}
                 onChange={(e) => setRoomData(e.target.value)}
             />
             <label htmlFor="userDataInput">輸入使用者名稱</label>
             <input
                 id="userDataInput"
-                className="w-36 h-12 rounded-full text-white px-8"
+                className="w-36 h-12 rounded-full text-white px-8 bg-gray-800"
                 value={userData}
                 onChange={(e) => setUserData(e.target.value)}
             />

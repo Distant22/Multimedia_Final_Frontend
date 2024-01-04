@@ -109,7 +109,7 @@ const Textbar: React.FC<TextBarProps> = ({ roomId, userId }) => {
                     value={currentMessage}
                     onKeyDown={handleKeyDown}
                     onChange={(e) => setCurrentMessage(e.target.value)}
-                    className="w-full max-w-[70%] h-[70%] rounded-full bg-gray-800 lg:pl-10 md:pl-8 pl-6" 
+                    className="w-full max-w-[70%] h-[70%] rounded-full bg-gray-800 lg:pl-10 md:pl-8 pl-6 text-white" 
                 />
                 <button onClick={sendMessage} className="h-[70%] w-[30%] rounded-full max-w-xs flex items-center justify-center bg-gray-800 text-white">送出</button>
             </div>
